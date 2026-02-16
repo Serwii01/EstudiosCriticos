@@ -1,0 +1,145 @@
+@use '@angular/material' as mat;
+
+
+/* =======================
+   Fuentes Estudios Críticos
+   ======================= */
+
+@font-face {
+  font-family: 'TitlingGothicFB';
+  src: url('/assets/fonts/TitlingGothicFBNor-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TitlingGothicFB';
+  src: url('/assets/fonts/TitlingGothicFBNor-Med.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TitlingGothicFB';
+  src: url('/assets/fonts/TitlingGothicFBWide-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TiemposHeadline';
+  src: url('/assets/fonts/TiemposHeadline-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =======================
+   Paleta propia
+   ======================= */
+
+:root {
+  --ec-red: #b8191c;
+  --ec-red-soft: #e53232;
+  --ec-red-dark: #8f1013;
+
+  --ec-bg-dark: #0f0b0b;
+  --ec-bg-elevated: #181010;
+  --ec-bg-card: #1c1212;
+
+  --ec-border-subtle: #2a1a1a;
+
+  --ec-text-main: #ffffff;
+  --ec-text-muted: #e5e5e5;
+  --ec-text-soft: #c4c4c4;
+}
+
+/* =======================
+   Base tipográfica
+   ======================= */
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background-color: var(--ec-bg-dark);
+  color: var(--ec-text-main);
+  font-family: 'TitlingGothicFB', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color-scheme: dark;
+}
+
+h1, .ec-heading-xl {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+h2, .ec-heading-lg {
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+h3, .ec-heading-md {
+  font-weight: 300;
+}
+
+.ec-subtitle-serif {
+  font-family: 'TiemposHeadline', 'Times New Roman', serif;
+  font-weight: 900;
+}
+
+/* Botón y tarjeta base */
+
+.ec-btn-primary {
+  background-color: var(--ec-red);
+  color: var(--ec-text-main);
+  border-radius: 999px;
+  padding: 0.75rem 1.75rem;
+  border: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.ec-btn-primary:hover {
+  background-color: var(--ec-red-dark);
+}
+
+.ec-card {
+  background-color: var(--ec-bg-card);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid var(--ec-border-subtle);
+}
+
+/* =======================
+   Tema Angular Material
+   ======================= */
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$rose-palette, // base parecida a tu rojo
+      tertiary: mat.$red-palette,
+    ),
+    typography: (
+      plain-family: 'TitlingGothicFB, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    ),
+    density: 0,
+  ));
+}
+
+
+/* styles.scss */
+a {
+  color: inherit;
+  text-decoration: none;
+  
+  &:visited {
+    color: inherit;
+  }
+}
