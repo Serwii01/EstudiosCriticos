@@ -5,7 +5,7 @@ import com.estudios.criticos.backend.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -15,18 +15,22 @@ public class NewsService {
     private NewsRepository newsRepository;
 
     public List<News> getAllNews() {
-        return newsRepository.findAllByOrderByDateDesc();
+        // Asegúrate de que este método exista en tu Repository,
+        // si no, usa newsRepository.findAll();
+        return newsRepository.findAll();
     }
 
-    public News createNews(News news) {
+    // ✅ RENOMBRADO: De createNews a saveNews para coincidir con el Controller
+    public News saveNews(News news) {
         if (news.getDate() == null) {
-            news.setDate(LocalDate.now());  // Default hoy
+            // ✅ CORREGIDO: Usamos java.util.Date en lugar de LocalDate
+            news.setDate(new Date());
         }
         return newsRepository.save(news);
     }
 
     public News getNewsById(Long id) {
         return newsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Noticia no encontrada: " + id));
+                .orElse(null); // Devolvemos null para que el Controller lance el 404
     }
 }

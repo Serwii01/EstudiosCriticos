@@ -1,34 +1,86 @@
-<div class="news-container">
-  <!-- Header -->
-  <header class="section-header">
-    <div class="section-header__bar"></div>
-    <h1>Todas las noticias</h1>
-  </header>
+<main class="news-page animate-fade-in">
+  <div class="max-w-container">
+    
+    <header class="news-header">
+      <div class="news-header__text">
+        <h1 class="ec-heading-xl">Actualidad Combativa</h1>
+        <p class="ec-text-soft">Noticias, comunicados y convocatorias del movimiento estudiantil organizado.</p>
+      </div>
+    </header>
 
-  <!-- Loading -->
-  <div *ngIf="loading" class="loading">Cargando noticias...</div>
+    <div class="toolbar ec-card">
+      <div class="search-box">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" placeholder="Buscar noticias..." (input)="onSearch($event)">
+      </div>
 
-  <!-- Empty -->
-  <div *ngIf="!loading && noticias.length === 0" class="empty-state">
-    No hay noticias aún.
+      <div class="filters">
+        <div class="filters__label">
+          <span class="material-symbols-outlined">tune</span>
+          <span>Filtrar</span>
+        </div>
+        <button class="filter-btn">
+          <span>Territorio</span>
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <button class="filter-btn">
+          <span>Categoría</span>
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">
+      <span class="material-symbols-outlined spin">refresh</span>
+      <p>Cargando prensa obrera...</p>
+    </div>
+
+    <div *ngIf="!loading && noticias.length > 0" class="news-grid">
+      <article *ngFor="let news of noticias" class="news-card group">
+        <div class="news-card__image-wrapper">
+          <div class="news-card__image" 
+               [style.background-image]="'url(' + (news.imageUrl || 'assets/img/placeholder.jpg') + ')'">
+          </div>
+          <div class="news-card__badge">
+            {{ news.activityType || 'NOTICIA' }}
+          </div>
+        </div>
+
+        <div class="news-card__content">
+          <div class="news-card__meta">
+            <div class="news-card__location">
+              <span class="material-symbols-outlined">location_on</span>
+              {{ getAssemblyName(news.assembly) }}
+            </div>
+            <span class="meta-separator">|</span>
+            <span class="news-card__date">{{ news.date }}</span>
+          </div>
+
+          <h3 class="news-card__title">{{ news.title }}</h3>
+          <p class="news-card__excerpt">{{ news.description }}</p>
+
+          <div class="news-card__footer">
+            <span class="read-time">Lectura de 3 min</span>
+            <a class="read-more" [routerLink]="['/noticias', news.id]">
+              LEER MÁS
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div *ngIf="!loading && noticias.length === 0" class="empty-state ec-card">
+      <span class="material-symbols-outlined">newspaper</span>
+      <p>No se han encontrado comunicados en esta sección.</p>
+    </div>
+
+    <div class="pagination" *ngIf="noticias.length > 0">
+      <button class="btn-load-more">
+        <span class="material-symbols-outlined">add</span>
+        Cargar más noticias
+      </button>
+    </div>
+
   </div>
-
-  <!-- Noticias (tu array de 2) -->
-  <section *ngIf="!loading && noticias.length > 0" class="news-grid">
-    <article *ngFor="let news of noticias; trackBy: trackByFn" class="news-card">
-      <div 
-        class="news-card__image" 
-        [style.background-image]="'url(' + (news.imageUrl || 'https://via.placeholder.com/400x200?text=News') + ')'">
-      </div>
-      <div class="news-card__body">
-        <span class="news-card__category">
-          {{ getAssemblyName(news.assembly) }}
-        </span>
-        <h3 class="news-card__title">{{ news.title }}</h3>
-        <p class="news-card__meta">{{ news.date }}</p>
-        <p class="news-card__excerpt">{{ news.description }}</p>
-        <button class="btn btn-primary">Leer más</button>
-      </div>
-    </article>
-  </section>
-</div>
+</main>

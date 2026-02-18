@@ -1,1 +1,92 @@
-<p>s</p>
+<div class="admin-view animate-fade-in">
+  <div class="container-narrow">
+
+    <section *ngIf="!authService.isAuthenticated()" class="ec-card auth-card">
+      <div class="section-header">
+        <div class="section-header__bar"></div>
+        <h2 class="ec-heading-lg">Acceso Administrador</h2>
+      </div>
+      
+      <p class="auth-card__intro ec-subtitle-serif">Identifícate para gestionar el portal.</p>
+
+      <form class="ec-form" (submit)="onLogin()">
+        <div class="ec-form__group">
+          <label class="ec-label">Usuario</label>
+          <input type="text" [(ngModel)]="formData.user" name="user" class="ec-input" placeholder="Introduce tu usuario" required>
+        </div>
+
+        <div class="ec-form__group">
+          <label class="ec-label">Contraseña</label>
+          <input type="password" [(ngModel)]="formData.pass" name="pass" class="ec-input" placeholder="••••••••" required>
+        </div>
+
+        <p *ngIf="loginError" class="ec-error">Acceso denegado</p>
+
+        <button type="submit" class="ec-btn-primary full-width">Entrar</button>
+      </form>
+    </section>
+
+    <section *ngIf="authService.isAuthenticated()" class="admin-panel">
+      <div class="section-header section-header--row">
+        <div class="section-header__left">
+          <div class="section-header__bar"></div>
+          <h2 class="ec-heading-lg">Nueva Publicación</h2>
+        </div>
+        <button (click)="authService.logout()" class="btn-logout">
+          <span class="material-symbols-outlined">logout</span>
+          Salir
+        </button>
+      </div>
+
+      <div class="ec-card">
+        <form class="ec-form">
+          <div class="ec-form__group">
+            <label class="ec-label">Titular</label>
+            <input type="text" [(ngModel)]="formData.title" name="title" class="ec-input ec-input--title" placeholder="Escribe el título aquí..." required>
+          </div>
+
+          <div class="ec-form__row">
+            <div class="ec-form__group">
+              <label class="ec-label">Asamblea</label>
+              <select [(ngModel)]="formData.assembly" name="assembly" class="ec-input ec-select">
+                <option *ngFor="let asm of assemblies" [value]="asm">{{ asm }}</option>
+              </select>
+            </div>
+            <div class="ec-form__group">
+              <label class="ec-label">Tipo de actividad</label>
+              <select [(ngModel)]="formData.activityType" name="activityType" class="ec-input ec-select">
+                <option *ngFor="let type of activityTypes" [value]="type">{{ type }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ec-form__group">
+            <label class="ec-label">Imagen de portada</label>
+            <div class="file-upload-wrapper">
+              <input type="file" (change)="onFileSelected($event)" accept="image/*" id="file-input" class="hidden-input">
+              <label for="file-input" class="file-upload-label">
+                <span class="material-symbols-outlined principle-icon">cloud_upload</span>
+                <span class="file-text">{{ selectedFile ? selectedFile.name : 'Subir imagen de portada' }}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="ec-form__group">
+            <label class="ec-label">Resumen</label>
+            <textarea [(ngModel)]="formData.description" name="description" class="ec-input" rows="3"></textarea>
+          </div>
+
+          <div class="ec-form__group">
+            <label class="ec-label">Cuerpo de la noticia</label>
+            <textarea [(ngModel)]="formData.longDescription" name="longDescription" class="ec-input ec-input--serif" rows="8"></textarea>
+          </div>
+
+          <button type="button" (click)="onCreateNews()" class="ec-btn-primary ec-btn--submit">
+            <span class="material-symbols-outlined">send</span>
+            Publicar noticia
+          </button>
+        </form>
+      </div>
+    </section>
+  </div>
+</div>

@@ -14,6 +14,23 @@
   }
 }
 
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.header-content--row {
+  justify-content: space-between;
+}
+
+.section-header__bar {
+  width: 4px;
+  height: 24px;
+  background: var(--ec-red);
+}
+
 .mission-card {
   border-radius: 1.5rem;
   overflow: hidden;

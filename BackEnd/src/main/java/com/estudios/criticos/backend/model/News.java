@@ -1,34 +1,52 @@
 package com.estudios.criticos.backend.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
-@Table(name = "news")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "news") // Buena práctica: definir nombre de tabla explícito
 public class News {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    // Título obligatorio
+    @Column(nullable = false, length = 200)
     private String title;
 
-    private String imageUrl;
-
-    @Enumerated(EnumType.STRING)
-    private Assembly assembly;  // ← Import auto
-
-    @NotBlank
+    // Resumen corto para la tarjeta (Home/Noticias)
+    @Column(length = 500)
     private String description;
 
-    private LocalDate date;
+    // Texto completo para la vista detallada (TEXT permite +65.000 caracteres)
+    @Column(columnDefinition = "TEXT")
+    private String longDescription;
 
-    private String details;
+    // Tipo de actividad: Se guarda como texto ("HUELGA", etc.)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false) // Obligatorio tener tipo
+    private ActivityType activityType;
+
+    // Asamblea (Sevilla, Málaga...). Obligatorio.
+    @Column(nullable = false, length = 50)
+    private String assembly;
+
+    // URL de la imagen (puede ser nula si la noticia no tiene foto)
+    private String imageUrl;
+
+    // Datos binarios de la imagen
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] imageData;
+
+    // Fecha de publicación
+    @Temporal(TemporalType.DATE) // Guarda solo día/mes/año (usar TIMESTAMP para hora)
+    @Column(nullable = false)
+    private Date date;
+
+    // Constructor vacío requerido por JPA (Lombok suele ponerlo, pero a veces ayuda explicitarlo)
+    public News() {}
 }
