@@ -1,92 +1,91 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Necesario para [(ngModel)]
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms'; 
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
 import { NewsService } from '../../services/news.service';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule], // Importamos ReactiveFormsModule
   templateUrl: './admin.html',
   styleUrl: './admin.scss'
 })
-export class AdminComponent {
-  // Inyección de servicios (estilo moderno Angular 18)
+export class AdminComponent implements OnInit {
+  private fb = inject(FormBuilder);
   authService = inject(AuthService);
   newsService = inject(NewsService);
 
-  // --- DATOS ---
+  // Definición de los formularios
+  loginForm!: FormGroup;
+  newsForm!: FormGroup;
 
-  // Listas para los desplegables
-  assemblies = ['General', 'Sevilla', 'Málaga', 'Granada', 'Córdoba'];
+  assemblies = ['General', 'Sevilla', 'Málaga'];
   activityTypes = ['HUELGA', 'ASAMBLEA', 'MANIFESTACION', 'CHARLA', 'CULTURAL', 'OTRO'];
-
-  // Modelo del formulario
-  formData = {
-    title: '',
-    description: '',     // Resumen
-    longDescription: '', // Texto completo
-    assembly: 'General', 
-    activityType: 'OTRO',
-    user: '', // Input login
-    pass: ''  // Input login
-  };
   
   loginError = false;
   selectedFile: File | null = null;
 
-  // --- MÉTODOS ---
+  ngOnInit(): void {
+    // Inicialización del formulario de Login
+    this.loginForm = this.fb.group({
+      user: ['', [Validators.required]],
+      pass: ['', [Validators.required]]
+    });
 
-  // 1. Intentar Loguearse
+    // Inicialización del formulario de Noticias con validaciones
+    this.newsForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(5)]],
+      assembly: ['General', Validators.required],
+      activityType: ['OTRO', Validators.required],
+      description: ['', [Validators.required, Validators.maxLength(200)]],
+      longDescription: ['', [Validators.required, Validators.minLength(20)]]
+    });
+  }
+
   onLogin() {
-    this.authService.login(this.formData.user, this.formData.pass).subscribe({
+    if (this.loginForm.invalid) return;
+
+    const { user, pass } = this.loginForm.value;
+    this.authService.login(user, pass).subscribe({
       next: () => {
         this.loginError = false;
-        console.log('✅ Admin conectado');
       },
       error: () => {
         this.loginError = true;
-        console.error('❌ Error de login');
       }
     });
   }
 
-  // 2. Detectar archivo seleccionado en el input
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
   }
 
-  // 3. Enviar noticia
   onCreateNews() {
-    // Validación básica
-    if (!this.formData.title) {
-      alert('El título es obligatorio');
+    if (this.newsForm.invalid) {
+      this.newsForm.markAllAsTouched(); // Muestra errores si intentan enviar vacío
       return;
     }
 
+    const val = this.newsForm.value;
+
     this.newsService.createNews(
-      this.formData.title,
-      this.formData.description,
-      this.formData.longDescription,
-      this.formData.assembly,
-      this.formData.activityType,
+      val.title,
+      val.description,
+      val.longDescription,
+      val.assembly,
+      val.activityType,
       this.selectedFile
     ).subscribe({
-      next: (res) => {
+      next: () => {
         alert('✅ Noticia publicada correctamente');
-        // Limpiar formulario
-        this.formData.title = '';
-        this.formData.description = '';
-        this.formData.longDescription = '';
+        this.newsForm.reset({ assembly: 'General', activityType: 'OTRO' });
         this.selectedFile = null;
-        // (Opcional) Resetear selects a valores por defecto
-        this.formData.assembly = 'General';
-        this.formData.activityType = 'OTRO';
       },
       error: (err) => {
         console.error(err);
-        alert('❌ Error al publicar. Asegúrate de estar logueado y que el servidor funcione.');
+        alert('❌ Error al publicar la noticia.');
       }
     });
   }

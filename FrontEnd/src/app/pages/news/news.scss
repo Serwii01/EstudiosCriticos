@@ -6,6 +6,55 @@
   min-height: 100vh;
 }
 
+/* Forzar estilos de mat-icon para que se vean como en about-us */
+mat-icon {
+  color: var(--ec-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+}
+
+.max-w-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Ajustes específicos para los iconos en diferentes zonas */
+.search-box mat-icon {
+  color: var(--ec-text-soft);
+  margin-right: 12px;
+}
+
+.filters__label mat-icon, 
+.filter-btn mat-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
+
+.news-card__location mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+.read-more mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.loading-state mat-icon {
+  width: 48px;
+  height: 48px;
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
 .max-w-container {
   max-width: 1200px;
   margin: 0 auto;

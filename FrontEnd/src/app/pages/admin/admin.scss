@@ -177,3 +177,77 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ... mantén tus estilos anteriores y añade estos ... */
+
+.ec-error-inline {
+  color: var(--ec-red-soft);
+  font-size: 11px;
+  font-family: 'TitlingGothicFB', sans-serif;
+  margin-top: -10px; // Pegado al input
+  margin-bottom: 5px;
+}
+
+.ec-btn-primary:disabled {
+  background-color: var(--ec-bg-elevated);
+  color: var(--ec-text-soft);
+  cursor: not-allowed;
+  border: 1px solid var(--ec-border-subtle);
+  &:hover { background-color: var(--ec-bg-elevated); }
+}
+
+/* Estilo para resaltar inputs inválidos al tocarlos */
+.ec-input.ng-invalid.ng-touched {
+  border-color: var(--ec-red-soft);
+}
+
+mat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ec-red);
+  
+  // Estilo para el icono grande de subida (como en about-us)
+  &.principle-icon {
+    font-size: 2.5rem; // Tamaño del glifo
+    height: 40px;      // Altura forzada
+    width: 40px;       // Anchura forzada
+    color: var(--ec-red-soft);
+    margin-bottom: 12px;
+  }
+}
+
+.btn-logout mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  margin-right: 4px;
+  color: inherit; // Para que cambie a blanco en el hover del botón
+}
+
+.ec-btn--submit mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  color: white;
+  margin-right: 8px;
+}
+
+/* Ajuste de la zona de carga para que el icono luzca bien */
+.file-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--ec-bg-elevated);
+  border: 2px dashed var(--ec-border-subtle);
+  padding: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    border-color: var(--ec-red);
+    background: var(--ec-bg-card);
+    mat-icon { transform: scale(1.1); transition: transform 0.2s; }
+  }
+}

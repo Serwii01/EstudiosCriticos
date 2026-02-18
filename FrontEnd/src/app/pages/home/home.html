@@ -1,38 +1,33 @@
-<main class="home">
-  <!-- HERO -->
+<main class="home animate-fade-in">
   <section class="hero">
-  <div class="hero__content">
-    <h1 class="hero__title">
-      <span>Organizar.</span><br />
-      <span>Luchar.</span><br />
-      <span class="hero__title--red">Transformar.</span>
-    </h1>
-
-    <p class="hero__text">
-      El sindicato estudiantil para quienes no se conforman. Educación crítica
-      para la transformación social radical.
-    </p>
-
-    <div class="hero__actions">
-      <button class="btn btn-primary">Leer manifiesto</button>
-      <button class="btn btn-secondary">Afíliate</button>
+    <div class="hero__content">
+      <h1 class="hero__title">
+        <span>Organizar.</span><br />
+        <span>Luchar.</span><br />
+        <span class="hero__title--red">Transformar.</span>
+      </h1>
+      <p class="hero__text">
+        El sindicato estudiantil para quienes no se conforman. Educación crítica
+        para la transformación social radical.
+      </p>
+      <div class="hero__actions">
+        <button class="btn btn-primary" routerLink="/conocenos" fragment="manifiesto">
+          Leer manifiesto
+        </button>
+        <button class="btn btn-secondary">Afíliate</button>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-
-  <!-- NUESTRA MISIÓN -->
   <section class="mission">
     <header class="section-header">
       <div class="section-header__bar"></div>
       <h2>Nuestra misión</h2>
     </header>
-
     <p class="mission__text">
       Luchamos contra la mercantilización de la educación y por una universidad pública, 
       gratuita y al servicio de la clase trabajadora.
     </p>
-
     <div class="mission__cards">
       <div class="mission-card">
         <h3>Educación pública</h3>
@@ -49,36 +44,51 @@
     </div>
   </section>
 
-  <!-- ÚLTIMAS ACCIONES -->
   <section class="latest">
-    <header class="section-header section-header--row">
-      <div class="section-header__left">
-        <div class="section-header__bar"></div>
-        <h2>Últimas acciones</h2>
+  <header class="section-header section-header--row">
+    <div class="section-header__left">
+      <div class="section-header__bar"></div>
+      <h2>Últimas acciones</h2>
+    </div>
+    <a class="section-header__link" routerLink="/noticias">Ver todo</a>
+  </header>
+
+  <div *ngIf="loading" class="loading-text">Cargando prensa obrera...</div>
+
+  <div class="latest__grid" *ngIf="!loading">
+    <article *ngFor="let news of ultimasAcciones; trackBy: trackByFn" class="news-card">
+      <div class="news-card__image" 
+           [style.background-image]="news.imageUrl ? 'url(' + news.imageUrl + ')' : 'url(assets/img/placeholder.jpg)'">
       </div>
-      <a class="section-header__link" routerLinkActive="active" routerLink="noticias">Ver todo</a>
-    </header>
+      <div class="news-card__body">
+        <span class="news-card__category">{{ getAssemblyName(news.assembly) }}</span>
+        <h3>{{ news.title }}</h3>
+        <p class="news-card__meta">{{ news.date | date:'dd/MM/yyyy' }}</p>
+        <p class="news-card__excerpt">{{ news.description }}</p>
+      </div>
+    </article>
+  </div>
+</section>
 
-   <div class="latest__grid">
-  <article *ngFor="let news of noticias; trackBy: trackByFn" class="news-card">
-    <div 
-      class="news-card__image" 
-      [style.background-image]="'url(' + news.imageUrl + ')'">
-      <!-- Quita [alt] por ahora -->
-    </div>
-    <div class="news-card__body">
-      <!-- titlecase nativo NO existe, usa función o texto -->
-      <span class="news-card__category">
-        {{ getAssemblyName(news.assembly) }}
-      </span>
-      <h3>{{ news.title }}</h3>
-      <p class="news-card__meta">{{ news.date }}</p>
-      <p class="news-card__excerpt">{{ news.description }}</p>
-    </div>
-  </article>
-</div>
+<section class="latest" *ngIf="proximamente.length > 0">
+  <header class="section-header">
+    <div class="section-header__bar"></div>
+    <h2>Próximamente</h2>
+  </header>
 
-
-
-  </section>
+  <div class="latest__grid">
+    <article *ngFor="let news of proximamente; trackBy: trackByFn" class="news-card news-card--upcoming">
+      <div class="news-card__image" 
+           [style.background-image]="news.imageUrl ? 'url(' + news.imageUrl + ')' : 'url(assets/img/placeholder.jpg)'">
+        <div class="news-card__badge">PRÓXIMA ACCIÓN</div>
+      </div>
+      <div class="news-card__body">
+        <span class="news-card__category">{{ getAssemblyName(news.assembly) }}</span>
+        <h3>{{ news.title }}</h3>
+        <p class="news-card__meta">{{ news.date | date:'dd/MM/yyyy' }}</p>
+        <p class="news-card__excerpt">{{ news.description }}</p>
+      </div>
+    </article>
+  </div>
+</section>
 </main>

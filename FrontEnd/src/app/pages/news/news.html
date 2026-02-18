@@ -10,33 +10,28 @@
 
     <div class="toolbar ec-card">
       <div class="search-box">
-        <span class="material-symbols-outlined">search</span>
-        <input type="text" placeholder="Buscar noticias..." (input)="onSearch($event)">
+        <mat-icon>search</mat-icon> <input type="text" placeholder="Buscar noticias...">
       </div>
 
       <div class="filters">
         <div class="filters__label">
-          <span class="material-symbols-outlined">tune</span>
-          <span>Filtrar</span>
+          <mat-icon>tune</mat-icon> <span>Filtrar</span>
         </div>
         <button class="filter-btn">
           <span>Territorio</span>
-          <span class="material-symbols-outlined">expand_more</span>
-        </button>
+          <mat-icon>expand_more</mat-icon> </button>
         <button class="filter-btn">
           <span>Categoría</span>
-          <span class="material-symbols-outlined">expand_more</span>
-        </button>
+          <mat-icon>expand_more</mat-icon> </button>
       </div>
     </div>
 
     <div *ngIf="loading" class="loading-state">
-      <span class="material-symbols-outlined spin">refresh</span>
-      <p>Cargando prensa obrera...</p>
+      <mat-icon class="spin">refresh</mat-icon> <p>Cargando prensa obrera...</p>
     </div>
 
     <div *ngIf="!loading && noticias.length > 0" class="news-grid">
-      <article *ngFor="let news of noticias" class="news-card group">
+      <article *ngFor="let news of noticias; trackBy: trackByFn" class="news-card group">
         <div class="news-card__image-wrapper">
           <div class="news-card__image" 
                [style.background-image]="'url(' + (news.imageUrl || 'assets/img/placeholder.jpg') + ')'">
@@ -49,8 +44,7 @@
         <div class="news-card__content">
           <div class="news-card__meta">
             <div class="news-card__location">
-              <span class="material-symbols-outlined">location_on</span>
-              {{ getAssemblyName(news.assembly) }}
+              <mat-icon>location_on</mat-icon> {{ getAssemblyName(news.assembly) }}
             </div>
             <span class="meta-separator">|</span>
             <span class="news-card__date">{{ news.date }}</span>
@@ -61,26 +55,16 @@
 
           <div class="news-card__footer">
             <span class="read-time">Lectura de 3 min</span>
-            <a class="read-more" [routerLink]="['/noticias', news.id]">
+            <a class="read-more">
               LEER MÁS
-              <span class="material-symbols-outlined">arrow_forward</span>
-            </a>
+              <mat-icon>arrow_forward</mat-icon> </a>
           </div>
         </div>
       </article>
     </div>
 
     <div *ngIf="!loading && noticias.length === 0" class="empty-state ec-card">
-      <span class="material-symbols-outlined">newspaper</span>
-      <p>No se han encontrado comunicados en esta sección.</p>
+      <mat-icon>newspaper</mat-icon> <p>No se han encontrado comunicados en esta sección.</p>
     </div>
-
-    <div class="pagination" *ngIf="noticias.length > 0">
-      <button class="btn-load-more">
-        <span class="material-symbols-outlined">add</span>
-        Cargar más noticias
-      </button>
-    </div>
-
   </div>
 </main>
