@@ -3,12 +3,12 @@ package com.estudios.criticos.backend.service;
 import com.estudios.criticos.backend.model.User;
 import com.estudios.criticos.backend.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService; // <--- IMPRESCINDIBLE
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService { // <--- REVISA QUE PONGA "implements UserDetailsService"
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "users") // 'user' es palabra reservada en SQL, mejor usar 'users'
+@Table(name = "users")
 public class User {
 
     @Id
@@ -16,7 +16,7 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password; // Aquí se guardará encriptada (BCrypt)
+    private String password;
 
-    private String role; // Ej: "ADMIN"
+    private String role;
 }

@@ -17,7 +17,7 @@ public class DataInitializer {
             if (userRepository.findByUsername("admin").isEmpty()) {
                 User admin = new User();
                 admin.setUsername("admin");
-                admin.setPassword(passwordEncoder.encode("1234")); // <--- AQUÍ CAMBIA TU CONTRASEÑA
+                admin.setPassword(passwordEncoder.encode("1234")); // 
                 admin.setRole("ADMIN");
                 userRepository.save(admin);
                 System.out.println("✅ Usuario ADMIN creado: admin / 1234");

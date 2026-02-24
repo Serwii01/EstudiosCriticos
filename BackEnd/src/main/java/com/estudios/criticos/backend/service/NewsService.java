@@ -15,15 +15,11 @@ public class NewsService {
     private NewsRepository newsRepository;
 
     public List<News> getAllNews() {
-        // Asegúrate de que este método exista en tu Repository,
-        // si no, usa newsRepository.findAll();
         return newsRepository.findAll();
     }
 
-    // ✅ RENOMBRADO: De createNews a saveNews para coincidir con el Controller
     public News saveNews(News news) {
         if (news.getDate() == null) {
-            // ✅ CORREGIDO: Usamos java.util.Date en lugar de LocalDate
             news.setDate(new Date());
         }
         return newsRepository.save(news);
@@ -31,6 +27,6 @@ public class NewsService {
 
     public News getNewsById(Long id) {
         return newsRepository.findById(id)
-                .orElse(null); // Devolvemos null para que el Controller lance el 404
+                .orElse(null);
     }
 }

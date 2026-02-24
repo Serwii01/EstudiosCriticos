@@ -8,7 +8,7 @@ import { NewsService } from '../../services/news.service';
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule], // Importamos ReactiveFormsModule
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule], 
   templateUrl: './admin.html',
   styleUrl: './admin.scss'
 })
@@ -17,7 +17,6 @@ export class AdminComponent implements OnInit {
   authService = inject(AuthService);
   newsService = inject(NewsService);
 
-  // Definición de los formularios
   loginForm!: FormGroup;
   newsForm!: FormGroup;
 
