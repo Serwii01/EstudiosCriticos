@@ -19,6 +19,7 @@ export class AuthService {
 
   // 1. Método para Loguearse
   login(user: string, pass: string) {
+    
     // Codificamos "usuario:contraseña" a Base64 (Estándar Basic Auth)
     const token = btoa(user + ':' + pass);
     const headerValue = 'Basic ' + token;

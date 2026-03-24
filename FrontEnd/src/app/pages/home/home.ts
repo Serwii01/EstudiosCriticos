@@ -42,19 +42,17 @@ export class HomeComponent implements OnInit, OnDestroy {
           const hoy = new Date();
           hoy.setHours(0, 0, 0, 0);
 
-          // 1. Ordenamos por fecha absoluta (timestamp)
           const ordenadas = [...data].sort((a, b) => 
             new Date(b.date).getTime() - new Date(a.date).getTime()
           );
 
-          // 2. Filtramos con una lógica más robusta
           this.ultimasAcciones = ordenadas
             .filter(n => new Date(n.date).getTime() <= hoy.getTime())
             .slice(0, 3);
 
           this.proximamente = ordenadas
             .filter(n => new Date(n.date).getTime() > hoy.getTime())
-            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) // La más cercana primero
+            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) 
             .slice(0, 3);
 
           console.log('✅ Home - Pasadas:', this.ultimasAcciones.length);
@@ -69,7 +67,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Importante limpiar la suscripción al destruir el componente
   ngOnDestroy() {
     if (this.newsSub) {
       this.newsSub.unsubscribe();
