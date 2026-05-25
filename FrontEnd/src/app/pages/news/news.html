@@ -1,6 +1,6 @@
 <main class="news-page animate-fade-in">
   <div class="max-w-container">
-    
+
     <header class="news-header">
       <div class="news-header__text">
         <h1 class="ec-heading-xl">Actualidad Combativa</h1>
@@ -10,35 +10,38 @@
 
     <div class="toolbar ec-card">
       <div class="search-box">
-        <mat-icon>search</mat-icon> <input type="text" placeholder="Buscar noticias...">
+        <mat-icon>search</mat-icon>
+        <input type="text" placeholder="Buscar noticias..." (input)="onSearch($any($event.target).value)">
       </div>
-
       <div class="filters">
         <div class="filters__label">
           <mat-icon>tune</mat-icon> <span>Filtrar</span>
         </div>
-        <button class="filter-btn">
-          <span>Territorio</span>
-          <mat-icon>expand_more</mat-icon> </button>
-        <button class="filter-btn">
-          <span>Categoría</span>
-          <mat-icon>expand_more</mat-icon> </button>
+        <button class="filter-btn" [class.active]="filtroAsamblea === ''" (click)="filtrarPor('')">Todas</button>
+        <button class="filter-btn" [class.active]="filtroAsamblea === 'Sevilla'" (click)="filtrarPor('Sevilla')">Sevilla</button>
+        <button class="filter-btn" [class.active]="filtroAsamblea === 'Málaga'" (click)="filtrarPor('Málaga')">Málaga</button>
+        <button class="filter-btn" [class.active]="filtroAsamblea === 'Granada'" (click)="filtrarPor('Granada')">Granada</button>
+        <button class="filter-btn" [class.active]="filtroAsamblea === 'General'" (click)="filtrarPor('General')">General</button>
       </div>
     </div>
 
     <div *ngIf="loading" class="loading-state">
-      <mat-icon class="spin">refresh</mat-icon> <p>Cargando prensa obrera...</p>
+      <mat-icon class="spin">refresh</mat-icon>
+      <p>Cargando prensa obrera...</p>
     </div>
 
-    <div *ngIf="!loading && noticias.length > 0" class="news-grid">
-      <article *ngFor="let news of noticias; trackBy: trackByFn" class="news-card group">
+    <div *ngIf="!loading && noticiasFiltradas.length > 0" class="news-grid">
+      <article
+        *ngFor="let news of noticiasFiltradas; trackBy: trackByFn"
+        class="news-card group"
+        [routerLink]="['/noticias', news.id]"
+        style="cursor: pointer;">
+
         <div class="news-card__image-wrapper">
-          <div class="news-card__image" 
+          <div class="news-card__image"
                [style.background-image]="'url(' + (news.imageUrl || 'assets/img/placeholder.jpg') + ')'">
           </div>
-          <div class="news-card__badge">
-            {{ news.activityType || 'NOTICIA' }}
-          </div>
+          <div class="news-card__badge">{{ news.activityType || 'NOTICIA' }}</div>
         </div>
 
         <div class="news-card__content">
@@ -47,7 +50,7 @@
               <mat-icon>location_on</mat-icon> {{ getAssemblyName(news.assembly) }}
             </div>
             <span class="meta-separator">|</span>
-            <span class="news-card__date">{{ news.date }}</span>
+            <span class="news-card__date">{{ news.date | date:'dd/MM/yyyy' }}</span>
           </div>
 
           <h3 class="news-card__title">{{ news.title }}</h3>
@@ -55,16 +58,18 @@
 
           <div class="news-card__footer">
             <span class="read-time">Lectura de 3 min</span>
-            <a class="read-more">
-              LEER MÁS
-              <mat-icon>arrow_forward</mat-icon> </a>
+            <span class="read-more">
+              LEER MÁS <mat-icon>arrow_forward</mat-icon>
+            </span>
           </div>
         </div>
       </article>
     </div>
 
-    <div *ngIf="!loading && noticias.length === 0" class="empty-state ec-card">
-      <mat-icon>newspaper</mat-icon> <p>No se han encontrado comunicados en esta sección.</p>
+    <div *ngIf="!loading && noticiasFiltradas.length === 0" class="empty-state ec-card">
+      <mat-icon>newspaper</mat-icon>
+      <p>No se han encontrado comunicados en esta sección.</p>
     </div>
+
   </div>
 </main>

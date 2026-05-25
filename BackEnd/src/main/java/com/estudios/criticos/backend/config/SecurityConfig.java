@@ -1,5 +1,6 @@
 package com.estudios.criticos.backend.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,10 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    // Lee los orígenes permitidos desde application.properties / variables de entorno
+    @Value("${cors.allowed-origins:http://localhost:4200}")
+    private String allowedOriginsRaw;
+
     // algoritmo encriptar contraseñas
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -36,8 +41,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
                 .authorizeHttpRequests(auth -> auth
-                        // El GET de noticias es público (para que cualquiera pueda leer la web)
+                        // GET de noticias y asambleas son públicos
                         .requestMatchers(HttpMethod.GET, "/api/news/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/assemblies/**").permitAll()
                         // Permite peticiones preflight (necesarias en navegadores modernos)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Todo lo demás (POST, DELETE, etc.) pide login
@@ -54,8 +60,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Solo aceptamos peticiones que vengan del puerto de Angular
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        // Orígenes permitidos (puede ser una lista separada por comas: localhost + dominio de Vercel)
+        List<String> origins = Arrays.asList(allowedOriginsRaw.split(","));
+        configuration.setAllowedOrigins(origins);
 
         // Métodos permitidos para el CRUD
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

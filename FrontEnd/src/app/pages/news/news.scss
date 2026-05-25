@@ -1,7 +1,7 @@
 /* NEWS PAGE - ESTUDIOS CRÍTICOS STYLE */
 
 .news-page {
-  padding: 40px 20px;
+  padding: 80px 20px 60px;
   background: var(--ec-bg-dark);
   min-height: 100vh;
 }
@@ -147,6 +147,7 @@ mat-icon {
   transition: 0.3s;
 
   &:hover { border-color: var(--ec-red); color: var(--ec-red-soft); }
+  &.active { background: var(--ec-red); border-color: var(--ec-red); color: white; }
 }
 
 // Grid y Cards

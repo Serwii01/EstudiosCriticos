@@ -1,15 +1,13 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // Usamos la ruta base. Al enviar las credenciales, si están mal, 
-  // Spring Security suele rechazar la petición incluso en rutas públicas 
-  // dependiendo de la configuración, o validamos simplemente la conexión.
-  private testUrl = '/api/news'; 
+  private testUrl = `${environment.apiUrl}/api/news`;
 
   // Signals para gestionar el estado de forma reactiva
   isAuthenticated = signal<boolean>(false);

@@ -1,0 +1,156 @@
+<main class="afiliate animate-fade-in">
+
+  <div class="afiliate__layout">
+
+    <!-- Columna izquierda: presentación -->
+    <aside class="afiliate__aside">
+      <div class="aside-badge">
+        <mat-icon>bolt</mat-icon>
+        <span>Únete a la resistencia</span>
+      </div>
+
+      <h1 class="aside-title">
+        Organízate.<br>
+        <span class="text-red">Lucha.</span><br>
+        Transforma.
+      </h1>
+
+      <div class="aside-bar"></div>
+
+      <p class="aside-desc">
+        Afiliarse a <strong>Estudios Críticos</strong> es el primer paso para defender
+        una educación pública y combativa. No seas espectador. Sé parte del cambio.
+      </p>
+
+      <div class="aside-benefits">
+        <div class="benefit-item ec-card">
+          <mat-icon>gavel</mat-icon>
+          <div>
+            <h4>Asesoría Legal</h4>
+            <p>Defensa jurídica ante abusos académicos y administrativos.</p>
+          </div>
+        </div>
+        <div class="benefit-item ec-card">
+          <mat-icon>groups</mat-icon>
+          <div>
+            <h4>Asambleas</h4>
+            <p>Voz y voto en las decisiones del sindicato.</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Columna derecha: formulario -->
+    <section class="afiliate__form-section">
+      <div class="form-card ec-card" *ngIf="!submitted">
+        <div class="form-card__header">
+          <div class="form-card__title">
+            <mat-icon>person_add</mat-icon>
+            <h2>Datos de Afiliación</h2>
+          </div>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="ec-form">
+
+          <div class="ec-form__row">
+            <div class="ec-form__group">
+              <label class="ec-label">Nombre <span class="required">*</span></label>
+              <input formControlName="nombre" class="ec-input" type="text" placeholder="Tu nombre">
+              <span class="ec-error-inline" *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched">
+                El nombre es obligatorio.
+              </span>
+            </div>
+            <div class="ec-form__group">
+              <label class="ec-label">Apellidos <span class="required">*</span></label>
+              <input formControlName="apellidos" class="ec-input" type="text" placeholder="Tus apellidos">
+              <span class="ec-error-inline" *ngIf="form.get('apellidos')?.invalid && form.get('apellidos')?.touched">
+                Los apellidos son obligatorios.
+              </span>
+            </div>
+          </div>
+
+          <div class="ec-form__row">
+            <div class="ec-form__group">
+              <label class="ec-label">Correo electrónico <span class="required">*</span></label>
+              <div class="input-icon-wrap">
+                <mat-icon>mail</mat-icon>
+                <input formControlName="email" class="ec-input ec-input--icon" type="email" placeholder="ejemplo@correo.com">
+              </div>
+              <span class="ec-error-inline" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+                Introduce un email válido.
+              </span>
+            </div>
+            <div class="ec-form__group">
+              <label class="ec-label">Teléfono <span class="optional">(Opcional)</span></label>
+              <div class="input-icon-wrap">
+                <mat-icon>call</mat-icon>
+                <input formControlName="telefono" class="ec-input ec-input--icon" type="tel" placeholder="+34 600 000 000">
+              </div>
+            </div>
+          </div>
+
+          <div class="ec-form__row">
+            <div class="ec-form__group">
+              <label class="ec-label">Centro de estudios <span class="required">*</span></label>
+              <div class="input-icon-wrap">
+                <mat-icon>school</mat-icon>
+                <input formControlName="centro" class="ec-input ec-input--icon" type="text" placeholder="Universidad / Instituto">
+              </div>
+              <span class="ec-error-inline" *ngIf="form.get('centro')?.invalid && form.get('centro')?.touched">
+                Indica tu centro de estudios.
+              </span>
+            </div>
+            <div class="ec-form__group">
+              <label class="ec-label">Asamblea <span class="required">*</span></label>
+              <div class="input-icon-wrap">
+                <mat-icon>location_on</mat-icon>
+                <select formControlName="asamblea" class="ec-input ec-input--icon ec-select">
+                  <option value="">Selecciona tu zona</option>
+                  <option *ngFor="let a of assemblies" [value]="a.id">{{ a.ciudad }}</option>
+                </select>
+              </div>
+              <span class="ec-error-inline" *ngIf="form.get('asamblea')?.invalid && form.get('asamblea')?.touched">
+                Selecciona una asamblea.
+              </span>
+            </div>
+          </div>
+
+          <div class="ec-form__group">
+            <label class="ec-label">¿Por qué quieres unirte? <span class="optional">(Opcional)</span></label>
+            <textarea formControlName="motivacion" class="ec-input" rows="3"
+              placeholder="Cuéntanos brevemente tus motivaciones..."></textarea>
+          </div>
+
+          <div class="form-terms">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="acepta">
+              <span>Acepto que mis datos sean usados para gestionar mi afiliación a Estudios Críticos.</span>
+            </label>
+            <span class="ec-error-inline" *ngIf="form.get('acepta')?.invalid && form.get('acepta')?.touched">
+              Debes aceptar para continuar.
+            </span>
+          </div>
+
+          <button type="submit" class="ec-btn-primary full-width" [disabled]="form.invalid">
+            <mat-icon>send</mat-icon>
+            Enviar solicitud de afiliación
+          </button>
+
+          <p class="form-note">
+            Al enviar, se abrirá tu cliente de correo con los datos ya rellenos
+            dirigido a la asamblea de tu zona.
+          </p>
+        </form>
+      </div>
+
+      <!-- Estado de éxito -->
+      <div class="success-card ec-card" *ngIf="submitted">
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <h2>¡Solicitud enviada!</h2>
+        <p>Hemos recibido tus datos. La asamblea de tu zona se pondrá en contacto contigo pronto.</p>
+        <button class="ec-btn-primary" (click)="submitted = false">Volver al formulario</button>
+      </div>
+    </section>
+
+  </div>
+</main>

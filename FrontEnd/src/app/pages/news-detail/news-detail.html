@@ -1,0 +1,61 @@
+<main class="news-detail animate-fade-in">
+
+  <div class="news-detail__container">
+
+    <a routerLink="/noticias" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      Volver a Noticias
+    </a>
+
+    <div *ngIf="loading" class="loading-state">
+      <p>Cargando noticia...</p>
+    </div>
+
+    <div *ngIf="error && !loading" class="error-state ec-card">
+      <mat-icon>error_outline</mat-icon>
+      <h2>Noticia no encontrada</h2>
+      <a routerLink="/noticias" class="btn btn-primary">Ver todas las noticias</a>
+    </div>
+
+    <article *ngIf="news && !loading" class="news-article">
+
+      <!-- Imagen de portada -->
+      <div class="news-article__cover"
+           [style.background-image]="news.imageUrl ? 'url(' + news.imageUrl + ')' : 'none'"
+           [class.no-image]="!news.imageUrl">
+        <div class="cover-overlay"></div>
+        <div class="cover-meta">
+          <span class="cover-badge">{{ news.activityType || 'NOTICIA' }}</span>
+        </div>
+      </div>
+
+      <!-- Contenido -->
+      <div class="news-article__body">
+        <div class="article-meta">
+          <span class="meta-assembly">
+            <mat-icon>location_on</mat-icon>
+            {{ getAssemblyName(news.assembly) }}
+          </span>
+          <span class="meta-sep">|</span>
+          <span class="meta-date">{{ news.date | date:'dd \'de\' MMMM \'de\' yyyy':'':'es' }}</span>
+        </div>
+
+        <h1 class="article-title">{{ news.title }}</h1>
+
+        <p class="article-excerpt" *ngIf="news.description">{{ news.description }}</p>
+
+        <div class="article-divider"></div>
+
+        <div class="article-content" *ngIf="news.longDescription">
+          <p *ngFor="let para of news.longDescription.split('\n')">{{ para }}</p>
+        </div>
+
+        <div class="article-content" *ngIf="!news.longDescription">
+          <p class="no-content">No hay contenido extendido para esta noticia.</p>
+        </div>
+      </div>
+
+    </article>
+
+  </div>
+</main>

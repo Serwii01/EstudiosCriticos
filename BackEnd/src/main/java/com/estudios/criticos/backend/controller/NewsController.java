@@ -80,6 +80,16 @@ public class NewsController {
     }
 
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteNews(@PathVariable Long id) {
+        News news = newsService.getNewsById(id);
+        if (news == null) {
+            return ResponseEntity.notFound().build();
+        }
+        newsService.deleteNews(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{id}/image")
     public ResponseEntity<byte[]> getNewsImage(@PathVariable Long id) {
         News news = newsService.getNewsById(id);

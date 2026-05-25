@@ -1,90 +1,201 @@
 <div class="admin-view animate-fade-in">
   <div class="container-narrow">
 
+    <!-- LOGIN -->
     <section *ngIf="!authService.isAuthenticated()" class="ec-card auth-card">
       <div class="section-header">
         <div class="section-header__bar"></div>
         <h2 class="ec-heading-lg">Acceso Administrador</h2>
       </div>
-      
       <p class="auth-card__intro ec-subtitle-serif">Identifícate para gestionar el portal.</p>
-
       <form class="ec-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
         <div class="ec-form__group">
           <label class="ec-label">Usuario</label>
           <input type="text" formControlName="user" class="ec-input" placeholder="Tu usuario">
         </div>
-
         <div class="ec-form__group">
           <label class="ec-label">Contraseña</label>
           <input type="password" formControlName="pass" class="ec-input" placeholder="••••••••">
         </div>
-
-        <p *ngIf="loginError" class="ec-error">Acceso denegado</p>
+        <p *ngIf="loginError" class="ec-error">Usuario o contraseña incorrectos.</p>
         <button type="submit" class="ec-btn-primary full-width" [disabled]="loginForm.invalid">Entrar</button>
       </form>
     </section>
 
-    <section *ngIf="authService.isAuthenticated()" class="admin-panel">
-      <div class="section-header section-header--row">
-        <div class="section-header__left">
-          <div class="section-header__bar"></div>
-          <h2 class="ec-heading-lg">Nueva Publicación</h2>
-        </div>
+    <!-- PANEL ADMIN -->
+    <div *ngIf="authService.isAuthenticated()" class="admin-panel">
+
+      <div class="admin-header">
+        <div class="section-header__bar"></div>
+        <h1 class="ec-heading-lg">Panel de Administración</h1>
         <button (click)="authService.logout()" class="btn-logout">
-          <mat-icon>logout</mat-icon> Salir </button>
+          <mat-icon>logout</mat-icon> Salir
+        </button>
       </div>
 
-      <div class="ec-card">
-        <form class="ec-form" [formGroup]="newsForm">
-          
-          <div class="ec-form__group">
-            <label class="ec-label">Titular</label>
-            <input type="text" formControlName="title" class="ec-input ec-input--title" placeholder="Escribe el título aquí...">
-            <span class="ec-error-inline" *ngIf="newsForm.get('title')?.invalid && newsForm.get('title')?.touched">
-              El titular es obligatorio (mín. 5 letras).
-            </span>
-          </div>
-
-          <div class="ec-form__row">
-            <div class="ec-form__group">
-              <label class="ec-label">Asamblea</label>
-              <select formControlName="assembly" class="ec-input ec-select">
-                <option *ngFor="let asm of assemblies" [value]="asm">{{ asm }}</option>
-              </select>
-            </div>
-            <div class="ec-form__group">
-              <label class="ec-label">Tipo de actividad</label>
-              <select formControlName="activityType" class="ec-input ec-select">
-                <option *ngFor="let type of activityTypes" [value]="type">{{ type }}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="ec-form__group">
-            <label class="ec-label">Imagen de portada</label>
-            <div class="file-upload-wrapper">
-              <input type="file" (change)="onFileSelected($event)" accept="image/*" id="file-input" class="hidden-input">
-              <label for="file-input" class="file-upload-label">
-                <mat-icon class="principle-icon">cloud_upload</mat-icon> <span class="file-text">{{ selectedFile ? selectedFile.name : 'Subir imagen de portada' }}</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="ec-form__group">
-            <label class="ec-label">Resumen</label>
-            <textarea formControlName="description" class="ec-input" rows="3"></textarea>
-          </div>
-
-          <div class="ec-form__group">
-            <label class="ec-label">Cuerpo de la noticia</label>
-            <textarea formControlName="longDescription" class="ec-input ec-input--serif" rows="8"></textarea>
-          </div>
-
-          <button type="button" (click)="onCreateNews()" class="ec-btn-primary ec-btn--submit" [disabled]="newsForm.invalid">
-            <mat-icon>send</mat-icon> Publicar noticia </button>
-        </form>
+      <div class="admin-tabs">
+        <button class="tab-btn" [class.active]="activeTab === 'noticias'" (click)="activeTab = 'noticias'">
+          <mat-icon>article</mat-icon> Noticias
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'asambleas'" (click)="activeTab = 'asambleas'">
+          <mat-icon>location_on</mat-icon> Asambleas
+        </button>
       </div>
-    </section>
+
+      <!-- TAB NOTICIAS -->
+      <div *ngIf="activeTab === 'noticias'">
+
+        <div class="ec-card admin-section">
+          <h2 class="admin-section__title"><mat-icon>add_circle</mat-icon> Nueva Publicación</h2>
+
+          <div *ngIf="newsSuccess" class="success-alert">
+            <mat-icon>check_circle</mat-icon>
+            <span>Noticia publicada correctamente.</span>
+          </div>
+
+          <form class="ec-form" [formGroup]="newsForm">
+            <div class="ec-form__group">
+              <label class="ec-label">Titular <span class="req">*</span></label>
+              <input type="text" formControlName="title" class="ec-input ec-input--title" placeholder="Escribe el título aquí...">
+              <span class="ec-error-inline" *ngIf="newsForm.get('title')?.invalid && newsForm.get('title')?.touched">Mínimo 5 caracteres.</span>
+            </div>
+
+            <div class="ec-form__row">
+              <div class="ec-form__group">
+                <label class="ec-label">Asamblea <span class="req">*</span></label>
+                <select formControlName="assembly" class="ec-input ec-select">
+                  <option *ngFor="let a of assemblies" [value]="a.ciudad">{{ a.ciudad }}</option>
+                </select>
+              </div>
+              <div class="ec-form__group">
+                <label class="ec-label">Tipo de actividad</label>
+                <select formControlName="activityType" class="ec-input ec-select">
+                  <option *ngFor="let t of activityTypes" [value]="t">{{ t }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="ec-form__group">
+              <label class="ec-label">Imagen de portada</label>
+              <div class="file-upload-wrapper">
+                <input type="file" (change)="onFileSelected($event)" accept="image/*" id="file-input" class="hidden-input">
+                <label for="file-input" class="file-upload-label">
+                  <mat-icon>cloud_upload</mat-icon>
+                  <span>{{ selectedFile ? selectedFile.name : 'Subir imagen de portada' }}</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="ec-form__group">
+              <label class="ec-label">Resumen <span class="req">*</span></label>
+              <textarea formControlName="description" class="ec-input" rows="3" placeholder="Descripción breve visible en el listado..."></textarea>
+            </div>
+
+            <div class="ec-form__group">
+              <label class="ec-label">Cuerpo de la noticia <span class="req">*</span></label>
+              <textarea formControlName="longDescription" class="ec-input ec-input--serif" rows="10" placeholder="Texto completo de la noticia..."></textarea>
+            </div>
+
+            <button type="button" (click)="onCreateNews()" class="ec-btn-primary ec-btn--submit" [disabled]="newsForm.invalid">
+              <mat-icon>send</mat-icon> Publicar noticia
+            </button>
+          </form>
+        </div>
+
+        <div class="ec-card admin-section" *ngIf="noticias.length > 0">
+          <h2 class="admin-section__title"><mat-icon>list</mat-icon> Noticias publicadas ({{ noticias.length }})</h2>
+          <div class="news-list">
+            <div class="news-list__item" *ngFor="let n of noticias">
+              <div class="news-list__info">
+                <span class="news-list__badge">{{ n.activityType || 'NOTICIA' }}</span>
+                <div>
+                  <p class="news-list__title">{{ n.title }}</p>
+                  <p class="news-list__meta">{{ n.assembly }} &middot; {{ n.date | date:'dd/MM/yyyy' }}</p>
+                </div>
+              </div>
+              <button class="btn-delete" (click)="onDeleteNews(n.id)" title="Eliminar noticia">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ec-card empty-placeholder" *ngIf="!noticias.length">
+          <mat-icon>newspaper</mat-icon>
+          <p>Aún no hay noticias publicadas.</p>
+        </div>
+      </div>
+
+      <!-- TAB ASAMBLEAS -->
+      <div *ngIf="activeTab === 'asambleas'">
+
+        <div class="ec-card admin-section">
+          <h2 class="admin-section__title"><mat-icon>add_location</mat-icon> Nueva Asamblea</h2>
+
+          <div *ngIf="assemblySuccess" class="success-alert">
+            <mat-icon>check_circle</mat-icon>
+            <span>Asamblea creada correctamente.</span>
+          </div>
+
+          <form class="ec-form" [formGroup]="assemblyForm">
+            <div class="ec-form__row">
+              <div class="ec-form__group">
+                <label class="ec-label">Ciudad <span class="req">*</span></label>
+                <input type="text" formControlName="ciudad" class="ec-input" placeholder="Ej: Córdoba">
+                <span class="ec-error-inline" *ngIf="assemblyForm.get('ciudad')?.invalid && assemblyForm.get('ciudad')?.touched">
+                  El nombre de ciudad es obligatorio.
+                </span>
+              </div>
+              <div class="ec-form__group">
+                <label class="ec-label">Email <span class="optional">(auto si vacío)</span></label>
+                <input type="email" formControlName="email" class="ec-input" placeholder="eecccordoba@gmail.com">
+                <p class="field-hint">Si lo dejas vacío se genera como eeccciudad@gmail.com</p>
+              </div>
+            </div>
+            <div class="ec-form__row">
+              <div class="ec-form__group">
+                <label class="ec-label">URL de Telegram</label>
+                <input type="url" formControlName="telegramUrl" class="ec-input" placeholder="https://t.me/...">
+              </div>
+              <div class="ec-form__group">
+                <label class="ec-label">URL de Instagram</label>
+                <input type="url" formControlName="instagramUrl" class="ec-input" placeholder="https://instagram.com/...">
+              </div>
+            </div>
+
+            <button type="button" (click)="onCreateAssembly()" class="ec-btn-primary" [disabled]="assemblyForm.invalid">
+              <mat-icon>add_location_alt</mat-icon> Crear asamblea
+            </button>
+          </form>
+        </div>
+
+        <div class="ec-card admin-section" *ngIf="assemblies.length > 0">
+          <h2 class="admin-section__title"><mat-icon>map</mat-icon> Asambleas ({{ assemblies.length }})</h2>
+          <div class="assembly-list">
+            <div class="assembly-list__item" *ngFor="let a of assemblies">
+              <div class="assembly-list__info">
+                <div class="assembly-list__dot" [class.active]="a.activa"></div>
+                <div>
+                  <p class="assembly-list__city">{{ a.ciudad }}</p>
+                  <p class="assembly-list__email">{{ a.email }}</p>
+                  <div class="assembly-list__links">
+                    <a *ngIf="a.instagramUrl" [href]="a.instagramUrl" target="_blank" class="link-chip">
+                      <mat-icon>photo_camera</mat-icon> Instagram
+                    </a>
+                    <a *ngIf="a.telegramUrl" [href]="a.telegramUrl" target="_blank" class="link-chip">
+                      <mat-icon>send</mat-icon> Telegram
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <button class="btn-delete" (click)="onDeleteAssembly(a.id)" title="Eliminar asamblea">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </div>

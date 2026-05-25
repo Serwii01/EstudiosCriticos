@@ -4,59 +4,52 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap, timeout } from 'rxjs/operators';
 import { News } from '../models/news.model';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
-  private apiUrl = '/api/news';
+  private apiUrl = `${environment.apiUrl}/api/news`;
 
-  // Inyectamos HttpClient y AuthService
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  // Obtener todas las noticias (Público)
   getAllNews(): Observable<News[]> {
-    console.log('📡 GET /api/news...');
     return this.http.get<News[]>(this.apiUrl).pipe(
-      timeout(5000), 
-      tap((data: News[]) => console.log('📡 RESP:', data)),
+      timeout(5000),
+      tap((data: News[]) => console.log('📡 Noticias cargadas:', data.length)),
       catchError((err: any) => {
         console.error('📡 ERROR:', err);
-        return of([]); 
+        return of([]);
       })
     );
   }
 
-  // Crear noticia (Privado - Requiere Auth y sube archivos)
+  getById(id: number): Observable<News> {
+    return this.http.get<News>(`${this.apiUrl}/${id}`);
+  }
+
   createNews(
-    title: string, 
-    description: string, 
-    longDescription: string, 
-    assembly: string, 
-    activityType: string, 
+    title: string,
+    description: string,
+    longDescription: string,
+    assembly: string,
+    activityType: string,
     file: File | null
   ): Observable<News> {
-    
-    // 1. Obtener cabeceras con credenciales (Basic Auth)
-    const headers = this.authService.getAuthHeaders();
-    
-    // 2. IMPORTANTE: Eliminar 'Content-Type' para que el navegador 
-    // detecte automáticamente que es un envío de archivos (multipart/form-data)
-    const multipartHeaders = headers.delete('Content-Type');
-
-    // 3. Crear el paquete de datos (FormData)
+    const headers = this.authService.getAuthHeaders().delete('Content-Type');
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description);
     formData.append('longDescription', longDescription);
     formData.append('assembly', assembly);
     formData.append('activityType', activityType);
-    
-    if (file) {
-      formData.append('file', file);
-    }
+    if (file) formData.append('file', file);
+    return this.http.post<News>(this.apiUrl, formData, { headers });
+  }
 
-    // 4. Enviar al Backend
-    return this.http.post<News>(this.apiUrl, formData, { headers: multipartHeaders });
+  deleteNews(id: number): Observable<void> {
+    const headers = this.authService.getAuthHeaders();
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

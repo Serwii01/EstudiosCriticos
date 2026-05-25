@@ -15,7 +15,7 @@ public class NewsService {
     private NewsRepository newsRepository;
 
     public List<News> getAllNews() {
-        return newsRepository.findAll();
+        return newsRepository.findAllByOrderByDateDesc();
     }
 
     public News saveNews(News news) {
@@ -26,7 +26,10 @@ public class NewsService {
     }
 
     public News getNewsById(Long id) {
-        return newsRepository.findById(id)
-                .orElse(null);
+        return newsRepository.findById(id).orElse(null);
+    }
+
+    public void deleteNews(Long id) {
+        newsRepository.deleteById(id);
     }
 }

@@ -1,0 +1,82 @@
+<main class="territorios animate-fade-in">
+
+  <header class="territorios__header">
+    <div class="section-header__bar"></div>
+    <div class="territorios__header-text">
+      <h1>Organización <span class="text-red">Territorial</span></h1>
+      <p>Encuentra tu asamblea más cercana y únete al frente estudiantil.</p>
+    </div>
+  </header>
+
+  <div class="territorios__search">
+    <mat-icon>search</mat-icon>
+    <input
+      type="text"
+      placeholder="Buscar ciudad..."
+      [value]="search"
+      (input)="onSearch($any($event.target).value)"
+    />
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <p>Cargando asambleas...</p>
+  </div>
+
+  <div *ngIf="!loading && filtered.length === 0" class="empty-state ec-card">
+    <mat-icon>location_off</mat-icon>
+    <p>No hay asambleas que coincidan con tu búsqueda.</p>
+  </div>
+
+  <div class="territorios__grid" *ngIf="!loading">
+    <div class="assembly-card ec-card" *ngFor="let a of filtered">
+      <div class="assembly-card__top">
+        <div class="assembly-card__icon">
+          <mat-icon>location_on</mat-icon>
+        </div>
+        <span class="assembly-card__status" [class.active]="a.activa">
+          <span class="status-dot"></span>
+          {{ a.activa ? 'Activa' : 'En construcción' }}
+        </span>
+      </div>
+
+      <h2 class="assembly-card__city">{{ a.ciudad }}</h2>
+      <p class="assembly-card__email">{{ a.email }}</p>
+
+      <div class="assembly-card__actions">
+        <a
+          *ngIf="a.instagramUrl"
+          [href]="a.instagramUrl"
+          target="_blank"
+          rel="noopener"
+          class="btn-action btn-action--instagram"
+        >
+          <mat-icon>photo_camera</mat-icon> Instagram
+        </a>
+        <a
+          *ngIf="a.telegramUrl"
+          [href]="a.telegramUrl"
+          target="_blank"
+          rel="noopener"
+          class="btn-action btn-action--telegram"
+        >
+          <mat-icon>send</mat-icon> Telegram
+        </a>
+        <a
+          [href]="'mailto:' + a.email"
+          class="btn-action btn-action--email"
+        >
+          <mat-icon>mail</mat-icon> Email
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="territorios__cta ec-card">
+    <div class="territorios__cta-text">
+      <h3>¿No encuentras tu ciudad?</h3>
+      <p>Puedes ser quien organice la asamblea en tu zona. Contáctanos y te ayudamos a arrancar.</p>
+    </div>
+    <a routerLink="/afiliate" class="btn btn-primary">Empieza a organizar</a>
+  </div>
+
+</main>
