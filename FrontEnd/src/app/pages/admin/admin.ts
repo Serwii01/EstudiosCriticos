@@ -32,6 +32,8 @@ export class AdminComponent implements OnInit {
 
   // Estado UI
   loginError = false;
+  loginLoading = false;
+  showPassword = false;
   selectedFile: File | null = null;
   activeTab: 'noticias' | 'asambleas' = 'noticias';
   newsSuccess = false;
@@ -61,14 +63,19 @@ export class AdminComponent implements OnInit {
 
   // ── Auth ──────────────────────────────────────────
   onLogin() {
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid || this.loginLoading) return;
     const { user, pass } = this.loginForm.value;
+    this.loginLoading = true;
+    this.loginError = false;
     this.authService.login(user, pass).subscribe({
       next: () => {
-        this.loginError = false;
+        this.loginLoading = false;
         this.loadData();
       },
-      error: () => { this.loginError = true; }
+      error: () => {
+        this.loginLoading = false;
+        this.loginError = true;
+      }
     });
   }
 

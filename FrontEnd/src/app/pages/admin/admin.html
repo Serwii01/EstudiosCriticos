@@ -11,14 +11,28 @@
       <form class="ec-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
         <div class="ec-form__group">
           <label class="ec-label">Usuario</label>
-          <input type="text" formControlName="user" class="ec-input" placeholder="Tu usuario">
+          <input type="text" formControlName="user" class="ec-input" placeholder="Tu usuario" autocomplete="username">
         </div>
         <div class="ec-form__group">
           <label class="ec-label">Contraseña</label>
-          <input type="password" formControlName="pass" class="ec-input" placeholder="••••••••">
+          <div class="input-password-wrapper">
+            <input [type]="showPassword ? 'text' : 'password'" formControlName="pass" class="ec-input" placeholder="••••••••" autocomplete="current-password">
+            <button type="button" class="btn-show-pass" (click)="showPassword = !showPassword" [title]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
         </div>
-        <p *ngIf="loginError" class="ec-error">Usuario o contraseña incorrectos.</p>
-        <button type="submit" class="ec-btn-primary full-width" [disabled]="loginForm.invalid">Entrar</button>
+        <p *ngIf="loginError" class="ec-error">
+          <mat-icon>error_outline</mat-icon> Usuario o contraseña incorrectos.
+        </p>
+        <button type="submit" class="ec-btn-primary full-width" [disabled]="loginForm.invalid || loginLoading">
+          <ng-container *ngIf="!loginLoading">
+            <mat-icon>lock_open</mat-icon> Entrar
+          </ng-container>
+          <ng-container *ngIf="loginLoading">
+            <mat-icon class="spin">refresh</mat-icon> Verificando...
+          </ng-container>
+        </button>
       </form>
     </section>
 

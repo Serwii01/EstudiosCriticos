@@ -4,6 +4,7 @@ import com.estudios.criticos.backend.model.Assembly;
 import com.estudios.criticos.backend.model.User;
 import com.estudios.criticos.backend.repository.AssemblyRepository;
 import com.estudios.criticos.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,20 +13,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class DataInitializer {
 
+    // En Railway: añade ADMIN_USERNAME y ADMIN_PASSWORD en Settings → Variables
+    // En local: se usan los valores por defecto (solo para desarrollo)
+    @Value("${ADMIN_USERNAME:admin}")
+    private String adminUsername;
+
+    @Value("${ADMIN_PASSWORD:eecc-local-dev}")
+    private String adminPassword;
+
     @Bean
     CommandLineRunner initDatabase(
             UserRepository userRepository,
             AssemblyRepository assemblyRepository,
             PasswordEncoder passwordEncoder) {
         return args -> {
-            // Usuario admin
-            if (userRepository.findByUsername("admin").isEmpty()) {
+            // Usuario admin — credenciales leídas desde variables de entorno
+            if (userRepository.findByUsername(adminUsername).isEmpty()) {
                 User admin = new User();
-                admin.setUsername("admin");
-                admin.setPassword(passwordEncoder.encode("1234"));
+                admin.setUsername(adminUsername);
+                admin.setPassword(passwordEncoder.encode(adminPassword));
                 admin.setRole("ADMIN");
                 userRepository.save(admin);
-                System.out.println("✅ Usuario ADMIN creado: admin / 1234");
+                System.out.println("✅ Usuario ADMIN creado: " + adminUsername);
             }
 
             // Asambleas iniciales

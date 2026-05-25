@@ -171,8 +171,42 @@ textarea.ec-input { height: auto; }
   option { background: var(--ec-bg-card); }
 }
 
-.ec-error { color: var(--ec-red-soft); font-size: 0.8rem; text-align: center; font-weight: 700; }
+.ec-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ec-red-soft);
+  font-size: 0.8rem;
+  text-align: center;
+  font-weight: 700;
+  mat-icon { font-size: 16px; width: 16px; height: 16px; color: inherit; }
+}
 .ec-error-inline { color: var(--ec-red-soft); font-size: 0.75rem; }
+
+/* ── Input contraseña con botón show/hide ─ */
+.input-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .ec-input { padding-right: 44px; }
+}
+
+.btn-show-pass {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  color: var(--ec-text-soft);
+  transition: color 0.2s;
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; color: inherit; }
+  &:hover { color: var(--ec-text-main); }
+}
 
 .field-hint { color: var(--ec-text-soft); font-size: 0.75rem; margin: 0; }
 
@@ -421,3 +455,6 @@ textarea.ec-input { height: auto; }
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+.spin { animation: spin 0.9s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
