@@ -57,7 +57,7 @@ public class NewsController {
         news.setLongDescription(longDescription);
         news.setAssembly(assembly);
         news.setActivityType(activityType);
-        news.setDate(new Date());
+        news.setDate(new Date());   
 
         if (file != null && !file.isEmpty()) {
             news.setImageData(file.getBytes());
